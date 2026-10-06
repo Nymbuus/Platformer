@@ -6,6 +6,8 @@ public:
 	Floor();
 
 	void draw();
+	
+	Rectangle getCollisionRect() const;
 
 private:
 	static constexpr Vector2 position = { 0.0f, 550.0f };

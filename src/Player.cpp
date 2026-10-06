@@ -1,15 +1,34 @@
 #include "Player.h"
 
 Player::Player()
-	: position{100.0f, 480.0f},
-	  verticalSpeed{0.0f}
+	: position{InitPos},
+	  velocity{InitVel}
 {
 }
 
-void Player::update() {
-
+void Player::update(float deltaTime) {
+	velocity.y += Gravity * deltaTime;
+	position.y += velocity.y * deltaTime;
 }
 
 void Player::draw() {
 	DrawRectangle(position.x, position.y, Width, Height, BLUE);
+}
+
+void Player::reset() {
+	position = InitPos;
+	velocity = InitVel;
+}
+
+void Player::jump() {
+
+}
+
+Rectangle Player::getCollisionRect() const{
+	return Rectangle(
+		position.x,
+		position.y,
+		Width,
+		Height
+	);
 }

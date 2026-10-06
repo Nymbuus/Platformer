@@ -22,7 +22,13 @@ void Game::processInput() {
 }
 
 void Game::update() {
-	player.update();
+	float deltaTime = GetFrameTime();
+	player.update(deltaTime);
+
+	if (CheckCollisionRecs(player.getCollisionRect(), floor.getCollisionRect()))
+	{
+		// Stop the player on the floor!
+	}
 }
 
 void Game::draw() {
