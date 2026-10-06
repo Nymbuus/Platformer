@@ -9,26 +9,43 @@ Game::Game() {
 void Game::run() {
 	while (!WindowShouldClose())
 	{
-		processInput();
-		update();
+		float deltaTime = GetFrameTime();
+		processInput(deltaTime);
+		update(deltaTime);
 		draw();
 	}
 
 	CloseWindow();
 }
 
-void Game::processInput() {
+void Game::processInput(float deltaTime) {
+	if (IsKeyPressed(KEY_SPACE) && playerFloorCollided)
+	{
+			player.jump();
+	}
 
+	if (IsKeyDown(KEY_D))
+	{
+		player.moveRight(deltaTime);
+	}
+
+	if (IsKeyDown(KEY_A))
+	{
+		player.moveLeft(deltaTime);
+	}
 }
 
-void Game::update() {
-	float deltaTime = GetFrameTime();
+void Game::update(float deltaTime) {
 	player.update(deltaTime);
 
 	if (CheckCollisionRecs(player.getCollisionRect(), floor.getCollisionRect()))
 	{
-		// Stop the player on the floor!
+		float floorPosY = floor.getCollisionRect().y;
+		player.hitFloor(floorPosY);
+		playerFloorCollided = true;
 	}
+	else
+		playerFloorCollided = false;
 }
 
 void Game::draw() {

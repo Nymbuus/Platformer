@@ -13,7 +13,9 @@ private:
 	Floor floor;
 	Player player;
 
-	void processInput();
-	void update();
+	bool playerFloorCollided = false;
+
+	void processInput(float deltaTime);
+	void update(float deltaTime);
 	void draw();
 };
