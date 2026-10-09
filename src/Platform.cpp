@@ -1,7 +1,8 @@
 #include "Platform.h"
 
 Platform::Platform(Vector2 position)
-	: position(position)
+	: position(position),
+	  playerHitLeft{false}
 {
 }
 
@@ -34,4 +35,12 @@ float Platform::getBottomSide() {
 
 float Platform::getTopSide() {
 	return position.y;
+}
+
+void Platform::hitLeft(bool hit) {
+	playerHitLeft = hit;
+}
+
+bool Platform::hasPlayerHitLeft() {
+	return playerHitLeft;
 }

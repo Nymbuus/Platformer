@@ -16,7 +16,7 @@ private:
 	Player player;
 
 	std::vector<Platform> platforms;
-	bool playerFloorCollided = false;
+	bool jumpReady = false;
 	float CollisionOffset = 5.0f;
 
 	void processInput(float deltaTime);
@@ -24,4 +24,9 @@ private:
 	void draw();
 
 	void createPlatforms();
+
+	void checkPlatformCollision(
+		Rectangle playerCollision,
+		Rectangle previousPlayerCollision,
+		Rectangle platformCollision);
 };

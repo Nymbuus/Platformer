@@ -21,9 +21,12 @@ void Game::run() {
 }
 
 void Game::processInput(float deltaTime) {
-	if (IsKeyPressed(KEY_SPACE) && playerFloorCollided)
+	if (IsKeyPressed(KEY_SPACE))
 	{
+		if (jumpReady)
+		{
 			player.jump();
+		}
 	}
 
 	if (IsKeyDown(KEY_D))
@@ -41,67 +44,24 @@ void Game::processInput(float deltaTime) {
 }
 
 void Game::update(float deltaTime) {
+	jumpReady = false;
+	Rectangle previousPlayerCollision = player.getCollisionRect();
+
 	player.update(deltaTime);
+
 	Rectangle playerCollision = player.getCollisionRect();
-	float playerRight = player.getRightSide();
-	float playerLeft = player.getLeftSide();
-	float playerBottom = player.getBottomSide();
-	float playerTop = player.getTopSide();
 	Rectangle platformCollision = platforms.front().getCollisionRect();
-	float platformRight = platforms.front().getRightSide();
-	float platformLeft = platforms.front().getLeftSide();
-	float platformBottom = platforms.front().getBottomSide();
-	float platformTop = platforms.front().getTopSide();
+	checkPlatformCollision(playerCollision, previousPlayerCollision, platformCollision);
 
-	if (CheckCollisionRecs(playerCollision, platformCollision))
+	Rectangle floorColl = floor.getCollisionRect();
+
+	// Checks if the player has collided with the floor.
+	if (CheckCollisionRecs(playerCollision, floorColl))
 	{
-		if (playerBottom - CollisionOffset > platformTop &&
-			playerTop + CollisionOffset < platformBottom &&
-			playerLeft < platformLeft &&
-			playerCollision.width > platformLeft - playerLeft)
-		{
-			std::cout << "platform!!  Hit Left Wall" << std::endl;
-			player.hitWall(platformLeft - playerCollision.width);
-		}
-
-		if (playerBottom - CollisionOffset > platformTop &&
-			playerTop + CollisionOffset < platformBottom &&
-			playerRight > platformRight &&
-			playerCollision.width > playerRight - platformRight)
-		{
-			std::cout << "platform!! Hit Right Wall" << std::endl;
-			player.hitWall(platformRight);
-		}
-
-		if (playerRight - CollisionOffset > platformLeft &&
-			playerLeft + CollisionOffset < platformRight &&
-			playerTop < platformTop &&
-			playerCollision.height > platformTop - playerTop)
-		{
-			std::cout << "platform!!  Hit Floor" << std::endl;
-			player.hitVertical(platformTop - playerCollision.height);
-		}
-
-		if (playerRight - CollisionOffset > platformLeft &&
-			playerLeft + CollisionOffset < platformRight &&
-			playerTop > platformTop &&
-			playerCollision.height > playerBottom - platformBottom)
-		{
-			std::cout << "platform!!  Hit Roof" << std::endl;
-			player.hitVertical(platformBottom);
-		}
-	}
-
-	Rectangle floorCollision = floor.getCollisionRect();
-
-	if (CheckCollisionRecs(playerCollision, floorCollision))
-	{
-		float floorPosY = floorCollision.y;
+		float floorPosY = floorColl.y;
 		player.hitVertical(floorPosY - playerCollision.height);
-		playerFloorCollided = true;
+		jumpReady = true;
 	}
-	else
-		playerFloorCollided = false;
 }
 
 void Game::draw() {
@@ -122,4 +82,50 @@ void Game::draw() {
 void Game::createPlatforms() {
 	Platform platform({ 400.0f, 420.0f });
 	platforms.emplace_back(platform);
+}
+
+void Game::checkPlatformCollision(
+	Rectangle playerCollision,
+	Rectangle previousPlayerCollision,
+	Rectangle platformCollision) {
+	if (CheckCollisionRecs(playerCollision, platformCollision))
+	{
+		float previousLeft = previousPlayerCollision.x;
+		float previousRight = previousLeft + previousPlayerCollision.width;
+		float previousTop = previousPlayerCollision.y;
+		float previousBottom = previousTop + previousPlayerCollision.height;
+
+		float playerLeft = playerCollision.x;
+		float playerRight = playerLeft + playerCollision.width;
+		float playerTop = playerCollision.y;
+		float playerBottom = playerTop + playerCollision.height;
+
+		float platformLeft = platformCollision.x;
+		float platformRight = platformLeft + platformCollision.width;
+		float platformTop = platformCollision.y;
+		float platformBottom = platformTop + platformCollision.height;
+
+		// Land on top of the platform
+		if (previousBottom <= platformTop && playerBottom >= platformTop)
+		{
+			std::cout << "Sitting on the plat!" << std::endl;
+			player.hitVertical(platformTop - playerCollision.height);
+			jumpReady = true;
+		}
+		// Hit the underside of the platform
+		else if (previousTop >= platformBottom && playerTop <= platformBottom)
+		{
+			player.hitVertical(platformBottom);
+		}
+		// Hit the left side of the platform
+		else if (previousRight <= platformLeft && playerRight >= platformLeft)
+		{
+			player.hitWall(platformLeft - playerCollision.width);
+		}
+		// Hit the right side of the platform
+		else if (previousLeft >= platformRight && playerLeft <= platformRight)
+		{
+			player.hitWall(platformRight);
+		}
+	}
 }
