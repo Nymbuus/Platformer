@@ -1,6 +1,8 @@
 #include "raylib.h"
 #include "Floor.h"
+#include "Platform.h"
 #include "Player.h"
+#include <vector>
 
 class Game
 {
@@ -13,9 +15,13 @@ private:
 	Floor floor;
 	Player player;
 
+	std::vector<Platform> platforms;
 	bool playerFloorCollided = false;
+	float CollisionOffset = 5.0f;
 
 	void processInput(float deltaTime);
 	void update(float deltaTime);
 	void draw();
+
+	void createPlatforms();
 };

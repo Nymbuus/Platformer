@@ -28,7 +28,7 @@ FetchContent_MakeAvailable(raylib)
 # --------------------------------------------------
 
 add_executable(Platformer
-    src/main.cpp "src/Game.cpp" "src/Game.h" "src/Floor.cpp" "src/Floor.h" "src/Player.cpp" "src/Player.h")
+    src/main.cpp "src/Game.cpp" "src/Game.h" "src/Floor.cpp" "src/Floor.h" "src/Player.cpp" "src/Player.h" "src/Platform.cpp" "src/Platform.h")
 
 # Link Raylib to our program
 target_link_libraries(Platformer PRIVATE raylib)
