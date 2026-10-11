@@ -21,12 +21,9 @@ void Game::run() {
 }
 
 void Game::processInput(float deltaTime) {
-	if (IsKeyPressed(KEY_SPACE))
+	if (IsKeyPressed(KEY_SPACE) && jumpReady)
 	{
-		if (jumpReady)
-		{
-			player.jump();
-		}
+		player.jump();
 	}
 
 	if (IsKeyDown(KEY_D))
@@ -45,13 +42,22 @@ void Game::processInput(float deltaTime) {
 
 void Game::update(float deltaTime) {
 	jumpReady = false;
+
 	Rectangle previousPlayerCollision = player.getCollisionRect();
 
 	player.update(deltaTime);
 
 	Rectangle playerCollision = player.getCollisionRect();
-	Rectangle platformCollision = platforms.front().getCollisionRect();
-	checkPlatformCollision(playerCollision, previousPlayerCollision, platformCollision);
+
+	// Checks collision between player and all platforms.
+	if (!platforms.empty())
+	{
+		for (int i = 0; i < platforms.size(); i++)
+		{
+			Rectangle platformCollision = platforms.at(i).getCollisionRect();
+			checkPlatformCollision(playerCollision, previousPlayerCollision, platformCollision);
+		}
+	}
 
 	Rectangle floorColl = floor.getCollisionRect();
 
@@ -82,6 +88,8 @@ void Game::draw() {
 void Game::createPlatforms() {
 	Platform platform({ 400.0f, 420.0f });
 	platforms.emplace_back(platform);
+	Platform platform2({ 470.0f, 350.0f });
+	platforms.emplace_back(platform2);
 }
 
 void Game::checkPlatformCollision(
