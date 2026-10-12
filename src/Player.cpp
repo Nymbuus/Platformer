@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player()
 	: position{InitPos},
@@ -9,7 +10,18 @@ Player::Player()
 void Player::update(float deltaTime) {
 	velocity.y += Gravity * deltaTime;
 	position.y += velocity.y * deltaTime;
+
+	if (velocity.x > MaxVelocityX)
+	{
+		velocity.x = MaxVelocityX;
+	}
+	else if (velocity.x < -MaxVelocityX)
+	{
+		velocity.x = -MaxVelocityX;
+	}
+
 	position.x += velocity.x * deltaTime;
+	std::cout << "Speed: " << velocity.x << std::endl;
 }
 
 void Player::draw() {

@@ -23,6 +23,7 @@ private:
 	void update(float deltaTime);
 	void draw();
 
+	void createWalls();
 	void createPlatforms();
 
 	void checkPlatformCollision(

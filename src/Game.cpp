@@ -4,6 +4,7 @@
 Game::Game() {
 	InitWindow(800, 600, "Platformer");
 	SetTargetFPS(60);
+	createWalls();
 	createPlatforms();
 	run();
 }
@@ -85,10 +86,17 @@ void Game::draw() {
 	EndDrawing();
 }
 
+void Game::createWalls() {
+	Platform platformLeftWall({ 0.0f, 0.0f }, 30.0f, 600.0f);
+	platforms.emplace_back(platformLeftWall);
+	Platform platformRightWall({ 770.0f, 0.0f }, 30.0f, 600.0f);
+	platforms.emplace_back(platformRightWall);
+}
+
 void Game::createPlatforms() {
-	Platform platform({ 400.0f, 420.0f });
+	Platform platform({ 400.0f, 420.0f }, 100.0f, 50.0f);
 	platforms.emplace_back(platform);
-	Platform platform2({ 470.0f, 350.0f });
+	Platform platform2({ 470.0f, 350.0f }, 100.0f, 50.0f);
 	platforms.emplace_back(platform2);
 }
 

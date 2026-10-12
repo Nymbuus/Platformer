@@ -3,7 +3,7 @@
 class Platform
 {
 public:
-	Platform(Vector2 position);
+	Platform(Vector2 position, float width, float height);
 
 	void draw();
 	
@@ -22,6 +22,6 @@ private:
 
 	bool playerHitLeft;
 
-	static constexpr float Width = 100.0f;
-	static constexpr float Height = 50.0f;
+	float width;
+	float height;
 };
