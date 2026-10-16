@@ -3,19 +3,11 @@
 class Platform
 {
 public:
-	Platform(Vector2 position, float width, float height);
+	Platform(Vector2 position, float width, float height, Color color);
 
 	void draw();
 	
 	Rectangle getCollisionRect() const;
-
-	float getRightSide();
-	float getLeftSide();
-	float getBottomSide();
-	float getTopSide();
-
-	void hitLeft(bool hit);
-	bool hasPlayerHitLeft();
 
 private:
 	Vector2 position;
@@ -24,4 +16,5 @@ private:
 
 	float width;
 	float height;
+	Color color;
 };

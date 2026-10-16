@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include "Floor.h"
 #include "Platform.h"
 #include "Player.h"
 #include <vector>
@@ -12,8 +11,15 @@ public:
 	void run();
 
 private:
-	Floor floor;
 	Player player;
+
+	static constexpr int InitWindowWidth = 1920;
+	static constexpr int InitWindowHeight = 1080;
+	static constexpr int InitFPS = 60;
+	static constexpr float MaxFrameTime = 0.0333f;
+
+	int windowWidth;
+	int windowHeight;
 
 	std::vector<Platform> platforms;
 	bool jumpReady = false;
@@ -30,7 +36,4 @@ private:
 		Rectangle playerCollision,
 		Rectangle previousPlayerCollision,
 		Rectangle platformCollision);
-
-
-	bool tempToggleActive;
 };

@@ -9,7 +9,7 @@ enum class Direction
 class Player
 {
 public:
-	Player();
+	Player(int windowWidth, int windowHeight);
 
 	void update(float deltaTime);
 	void draw();
@@ -21,11 +21,6 @@ public:
 	void deaccelerate(float deltaTime);
 	void hitVertical(float stayPosY);
 	void hitWall(float StayPosX);
-
-	float getRightSide();
-	float getLeftSide();
-	float getBottomSide();
-	float getTopSide();
 
 	Rectangle getCollisionRect() const;
 

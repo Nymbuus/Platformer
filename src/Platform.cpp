@@ -1,16 +1,17 @@
 #include "Platform.h"
 
-Platform::Platform(Vector2 position, float width, float height)
+Platform::Platform(Vector2 position, float width, float height, Color color)
 	: position(position),
 	  playerHitLeft{false},
 	  width{width},
-	  height{height}
+	  height{height},
+	  color{color}
 {
 }
 
 void Platform::draw()
 {
-	DrawRectangle(position.x, position.y, width, height, RED);
+	DrawRectangle(position.x, position.y, width, height, color);
 }
 
 Rectangle Platform::getCollisionRect() const
@@ -21,28 +22,4 @@ Rectangle Platform::getCollisionRect() const
 		width,
 		height
 	);
-}
-
-float Platform::getRightSide() {
-	return position.x + width;
-}
-
-float Platform::getLeftSide() {
-	return position.x;
-}
-
-float Platform::getBottomSide() {
-	return position.y + height;
-}
-
-float Platform::getTopSide() {
-	return position.y;
-}
-
-void Platform::hitLeft(bool hit) {
-	playerHitLeft = hit;
-}
-
-bool Platform::hasPlayerHitLeft() {
-	return playerHitLeft;
 }

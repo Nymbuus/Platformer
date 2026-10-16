@@ -1,20 +1,26 @@
 #include "Game.h"
+#include <algorithm>
 #include <iostream>
 
-Game::Game() 
-	: tempToggleActive{false}
+Game::Game()
+	: player(InitWindowWidth, InitWindowHeight),
+	  windowWidth{InitWindowWidth},
+	  windowHeight{InitWindowHeight}
 {
-	InitWindow(1920, 1080, "Platformer");
-	SetTargetFPS(60);
+	InitWindow(InitWindowWidth, InitWindowHeight, "Platformer");
+	SetTargetFPS(InitFPS);
+	ToggleFullscreen();
 	createWalls();
 	createPlatforms();
 	run();
 }
 
+// Runs the whole gameloop.
 void Game::run() {
 	while (!WindowShouldClose())
 	{
 		float deltaTime = GetFrameTime();
+		deltaTime = std::min(deltaTime, MaxFrameTime);
 		processInput(deltaTime);
 		update(deltaTime);
 		draw();
@@ -23,6 +29,7 @@ void Game::run() {
 	CloseWindow();
 }
 
+// Process all inputs and acts accordingly.
 void Game::processInput(float deltaTime) {
 	if (IsKeyPressed(KEY_SPACE) && jumpReady)
 	{
@@ -32,8 +39,6 @@ void Game::processInput(float deltaTime) {
 	if (IsKeyPressed(KEY_T))
 	{
 		ToggleFullscreen();
-		tempToggleActive = true;
-		std::cout << "T pressed!" << std::endl;
 	}
 
 	if (IsKeyDown(KEY_D))
@@ -50,6 +55,7 @@ void Game::processInput(float deltaTime) {
 	}
 }
 
+// Updates everything that needs to be checked every frame.
 void Game::update(float deltaTime) {
 	jumpReady = false;
 
@@ -58,9 +64,6 @@ void Game::update(float deltaTime) {
 	player.update(deltaTime);
 
 	Rectangle playerCollision = player.getCollisionRect();
-
-	if (playerCollision.y - previousPlayerCollision.y > 130.0f)
-t		std::cout << "WAY TOO BIG" << std::endl;
 
 	// Checks collision between player and all platforms.
 	if (!platforms.empty())
@@ -71,17 +74,6 @@ t		std::cout << "WAY TOO BIG" << std::endl;
 			checkPlatformCollision(playerCollision, previousPlayerCollision, platformCollision);
 		}
 	}
-
-	Rectangle floorColl = floor.getCollisionRect();
-
-	std::cout << "Player posX: " << player.getCollisionRect().x << "   posY: " << player.getCollisionRect().y << std::endl;
-
-	if (CheckCollisionRecs(playerCollision, floorColl))
-	{
-		float floorPosY = floorColl.y;
-		player.hitVertical(floorPosY - playerCollision.height);
-		jumpReady = true;
-	}
 }
 
 void Game::draw() {
@@ -89,7 +81,6 @@ void Game::draw() {
 	ClearBackground(RAYWHITE);
 	DrawText("Platformer", 300, 10, 30, BLACK);
 
-	floor.draw();
 	player.draw();
 	if(!platforms.empty())
 	{
@@ -100,16 +91,18 @@ void Game::draw() {
 }
 
 void Game::createWalls() {
-	Platform platformLeftWall({ 0.0f, 0.0f }, 30.0f, 600.0f);
+	Platform platformLeftWall({ 0.0f, 0.0f }, 30.0f, windowHeight, ORANGE);
 	platforms.emplace_back(platformLeftWall);
-	Platform platformRightWall({ 770.0f, 0.0f }, 30.0f, 600.0f);
+	Platform platformRightWall({ windowWidth - 30.0f, 0.0f }, 30.0f, windowHeight, ORANGE);
 	platforms.emplace_back(platformRightWall);
 }
 
 void Game::createPlatforms() {
-	Platform platform({ 400.0f, 420.0f }, 100.0f, 50.0f);
+	Platform floor({ 0.0f, windowHeight - 50.0f }, windowWidth, 50.0f, GREEN);
+	platforms.emplace_back(floor);
+	Platform platform({ 400.0f, windowHeight - 180.0f }, 100.0f, 50.0f, RED);
 	platforms.emplace_back(platform);
-	Platform platform2({ 470.0f, 350.0f }, 100.0f, 50.0f);
+	Platform platform2({ 470.0f, windowHeight - 250.0f }, 100.0f, 50.0f, RED);
 	platforms.emplace_back(platform2);
 }
 
@@ -137,7 +130,6 @@ void Game::checkPlatformCollision(
 		// Land on top of the platform
 		if (previousBottom <= platformTop && playerBottom >= platformTop)
 		{
-			std::cout << "Sitting on the plat!" << std::endl;
 			player.hitVertical(platformTop - playerCollision.height);
 			jumpReady = true;
 		}

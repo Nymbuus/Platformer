@@ -1,8 +1,8 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player()
-	: position{InitPos},
+Player::Player(int windowWidth, int windowheight)
+	: position{windowWidth/19.2f, windowheight/10.8f},
 	  velocity{InitVel}
 {
 }
@@ -82,20 +82,4 @@ Rectangle Player::getCollisionRect() const{
 		Width,
 		Height
 	);
-}
-
-float Player::getRightSide() {
-	return position.x + Width;
-}
-
-float Player::getLeftSide() {
-	return position.x;
-}
-
-float Player::getBottomSide() {
-	return position.y + Height;
-}
-
-float Player::getTopSide() {
-	return position.y;
 }
