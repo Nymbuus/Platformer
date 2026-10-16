@@ -30,4 +30,7 @@ private:
 		Rectangle playerCollision,
 		Rectangle previousPlayerCollision,
 		Rectangle platformCollision);
+
+
+	bool tempToggleActive;
 };

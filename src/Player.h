@@ -35,10 +35,10 @@ private:
 
 	static constexpr Vector2 InitVel = { 0.0f, 0.0f };
 	static constexpr Vector2 InitPos = { 100.0f, 480.0f };
-	static constexpr float JumpStrength = -600.0f;
-	static constexpr float HorizontalAcceleration = 3200.0f;
-	static constexpr float MaxVelocityX = 1300.0f;
+	static constexpr float JumpStrength = -1000.0f;
+	static constexpr float HorizontalAcceleration = 3300.0f;
+	static constexpr float MaxVelocityX = 500.0f;
 	static constexpr float Width = 25.0f;
 	static constexpr float Height = 50.0f;
-	static constexpr float Gravity = 1000.0f;
+	static constexpr float Gravity = 2800.0f;
 };

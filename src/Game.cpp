@@ -1,8 +1,10 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() {
-	InitWindow(800, 600, "Platformer");
+Game::Game() 
+	: tempToggleActive{false}
+{
+	InitWindow(1920, 1080, "Platformer");
 	SetTargetFPS(60);
 	createWalls();
 	createPlatforms();
@@ -25,6 +27,13 @@ void Game::processInput(float deltaTime) {
 	if (IsKeyPressed(KEY_SPACE) && jumpReady)
 	{
 		player.jump();
+	}
+
+	if (IsKeyPressed(KEY_T))
+	{
+		ToggleFullscreen();
+		tempToggleActive = true;
+		std::cout << "T pressed!" << std::endl;
 	}
 
 	if (IsKeyDown(KEY_D))
@@ -50,6 +59,9 @@ void Game::update(float deltaTime) {
 
 	Rectangle playerCollision = player.getCollisionRect();
 
+	if (playerCollision.y - previousPlayerCollision.y > 130.0f)
+t		std::cout << "WAY TOO BIG" << std::endl;
+
 	// Checks collision between player and all platforms.
 	if (!platforms.empty())
 	{
@@ -62,7 +74,8 @@ void Game::update(float deltaTime) {
 
 	Rectangle floorColl = floor.getCollisionRect();
 
-	// Checks if the player has collided with the floor.
+	std::cout << "Player posX: " << player.getCollisionRect().x << "   posY: " << player.getCollisionRect().y << std::endl;
+
 	if (CheckCollisionRecs(playerCollision, floorColl))
 	{
 		float floorPosY = floorColl.y;

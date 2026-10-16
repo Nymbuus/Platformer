@@ -21,7 +21,6 @@ void Player::update(float deltaTime) {
 	}
 
 	position.x += velocity.x * deltaTime;
-	std::cout << "Speed: " << velocity.x << std::endl;
 }
 
 void Player::draw() {
